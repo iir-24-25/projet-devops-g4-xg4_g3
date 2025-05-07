@@ -4,16 +4,16 @@ on:
   push:
     branches: [ main, docnow-jee ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, docnow-jee ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '23'
-    - run: mvn -B clean test package
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '23'
+      - run: mvn -B clean test package
