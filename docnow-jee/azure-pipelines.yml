@@ -1,0 +1,28 @@
+trigger:
+  branches:
+    include:
+      - docnow-jee
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  # 1) Checkout
+  - checkout: self
+
+  # 2) Build & tests Maven
+  - task: Maven@3
+    displayName: 'Maven clean test package'
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean test package'
+      options: '-B'
+
+  # 3) Publier les rapports JUnit (tests)
+  - task: PublishTestResults@2
+    displayName: 'Publish JUnit Test Results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      failTaskOnFailedTests: true
