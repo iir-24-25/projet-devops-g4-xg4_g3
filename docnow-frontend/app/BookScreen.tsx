@@ -37,6 +37,34 @@ export default function BookScreen() {
   const [consultationMode, setConsultationMode] = useState('En ligne');
   const [problemDescription, setProblemDescription] = useState('');
 
+  const doctorStr = Array.isArray(doctor) ? doctor[0] : doctor;
+
+  const handleBook = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/rendezvous', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patientId: 'ID_DU_PATIENT', // À remplacer dynamiquement
+          medecinId: doctorStr ? JSON.parse(doctorStr).id : '',
+          dateHeure: '2024-05-10T10:00:00.000Z', // À construire dynamiquement
+          statut: 'en attente',
+          canalConsultation: consultationMode
+        })
+      });
+      const data = await response.json();
+      if (data && data.id) {
+        alert('Rendez-vous réservé !');
+        router.push('/home');
+      } else {
+        alert('Impossible de réserver');
+      }
+    } catch (error) {
+      alert('Erreur de connexion au serveur');
+      console.error(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Scroll Content */}
@@ -47,7 +75,7 @@ export default function BookScreen() {
             <Ionicons name="arrow-back" size={24} color="#007AFF" />
           </TouchableOpacity>
           <Text style={styles.doctorName}>
-            {doctor ? JSON.parse(doctor).name : 'Chargement...'}
+            {doctorStr ? JSON.parse(doctorStr).name : 'Chargement...'}
           </Text>
           <View style={{ width: 24 }} /> {/* Espaceur pour aligner le bouton retour */}
         </View>
@@ -89,7 +117,7 @@ export default function BookScreen() {
           />
         </View>
 
-        {/* Sélection de l’heure */}
+        {/* Sélection de l'heure */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Available Time</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -239,24 +267,28 @@ export default function BookScreen() {
 
         {/* Bouton de confirmation */}
         <TouchableOpacity 
-  style={styles.paymentButton}
-  onPress={() => router.push({
-    pathname: '/ConfirmationScreen',
-    params: {
-      doctor: JSON.stringify(doctor),
-      selectedDay,
-      selectedTime: '10:00 AM', // À modifier si nécessaire
-      patientName,
-      age,
-      gender,
-      consultationMode,
-      problemDescription,
-    }
-  })}
->
-  <Text style={styles.paymentButtonText}>Suivant</Text>
-</TouchableOpacity>
-</ScrollView>
+          style={styles.paymentButton}
+          onPress={() => router.push({
+            pathname: '/ConfirmationScreen',
+            params: {
+              doctor: JSON.stringify(doctor),
+              selectedDay,
+              selectedTime: '10:00 AM', // À modifier si nécessaire
+              patientName,
+              age,
+              gender,
+              consultationMode,
+              problemDescription,
+            }
+          })}
+        >
+          <Text style={styles.paymentButtonText}>Suivant</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.saveButton} onPress={handleBook}>
+          <Text style={styles.saveButtonText}>Réserver</Text>
+        </TouchableOpacity>
+      </ScrollView>
       {/* Barre de navigation inférieure */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
@@ -436,5 +468,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#007AFF',
     marginTop: 4,
+  },
+  saveButton: {
+    backgroundColor: '#007AFF',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

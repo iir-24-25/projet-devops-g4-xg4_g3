@@ -1,32 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function FavoritesScreen() {
-  const favorites = [
-    {
-      id: '1',
-      doctor: 'Dr. Olivia Turner, M.D.',
-      specialty: 'Dermato-Endocrinology',
-    },
-    {
-      id: '2',
-      doctor: 'Dr. Sophia Martinez, Ph.D.',
-      specialty: 'Cosmetic Bioengineering',
-    },
-    {
-      id: '3',
-      doctor: 'Dr. Michael Davidson, M.D.',
-      specialty: 'Nano-Dermatology',
-    },
-  ];
+  const [favorites, setFavorites] = useState([]);
 
-  const renderItem = ({ item }) => (
+  useEffect(() => {
+    fetch('http://localhost:8080/api/favoris/utilisateur/ID_DU_PATIENT')
+      .then(res => res.json())
+      .then(data => setFavorites(data.listeMedecins || []));
+  }, []);
+
+  const renderItem = ({ item }: { item: string }) => (
     <View style={styles.favoriteItem}>
       <Ionicons name="heart" size={24} color="#FF6347" />
       <View style={styles.doctorInfo}>
-        <Text style={styles.doctorName}>{item.doctor}</Text>
-        <Text style={styles.doctorSpecialty}>{item.specialty}</Text>
+        <Text style={styles.doctorName}>{item}</Text>
       </View>
     </View>
   );

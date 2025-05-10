@@ -27,41 +27,55 @@ export default function InformationUserScreen() {
   // État pour la date en texte
   const [birthDateText, setBirthDateText] = useState('01/01/1990');
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: string, value: string) => {
     setUser({
       ...user,
       [field]: value,
     });
   };
 
-  const formatDateToDisplay = (date) => {
+  const formatDateToDisplay = (date: Date) => {
     return date.toLocaleDateString('fr-FR'); // JJ/MM/AAAA
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validation simple du format JJ/MM/AAAA
     const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
     if (!regex.test(birthDateText)) {
       Alert.alert('Erreur', 'Veuillez entrer une date valide au format JJ/MM/AAAA.');
       return;
     }
-
-    // Conversion en Date
     const [day, month, year] = birthDateText.split('/');
     const parsedDate = new Date(`${year}-${month}-${day}`);
-
     if (isNaN(parsedDate.getTime())) {
       Alert.alert('Erreur', 'La date saisie est invalide.');
       return;
     }
-
-    // Mise à jour dans l'objet utilisateur
     setUser({ ...user, birthDate: parsedDate });
-
-    // Confirmation
-    Alert.alert('Succès', 'Informations mises à jour avec succès.');
-    console.log('Données utilisateur :', user);
-    router.back(); // Retour à l'écran précédent
+    try {
+      const response = await fetch('http://localhost:8080/api/patients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nom: user.name,
+          prenom: '',
+          email: user.email,
+          telephone: user.phone,
+          adresse: user.address,
+          motDePasse: 'azerty'
+        })
+      });
+      const data = await response.json();
+      if (data && data.id) {
+        Alert.alert('Succès', 'Compte créé avec succès !');
+        router.push('/login');
+      } else {
+        Alert.alert('Erreur', 'Impossible de créer le compte');
+      }
+    } catch (error) {
+      Alert.alert('Erreur', 'Erreur de connexion au serveur');
+      console.error(error);
+    }
   };
 
   return (

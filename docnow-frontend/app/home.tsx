@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,45 +11,26 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 
+type Doctor = {
+  id: string;
+  name: string;
+  specialty: string;
+  rating?: number;
+  consultations?: number;
+  profilePicture?: any;
+};
+
 const HomeScreen = () => {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const router = useRouter();
 
-  // Mock data for doctors and appointments
-  const doctors = [
-    {
-      id: 1,
-      name: 'Dr. Olivia Turner, M.D.',
-      specialty: 'Dermato-Endocrinology',
-      rating: 5,
-      consultations: 60,
-      profilePicture: require('@/assets/images/profile.jpg'),
-    },
-    {
-      id: 2,
-      name: 'Dr. Alexander Bennett, Ph.D.',
-      specialty: 'Dermo-Genetics',
-      rating: 4.5,
-      consultations: 40,
-      profilePicture: require('@/assets/images/profile.jpg'),
-    },
-    {
-      id: 3,
-      name: 'Dr. Sophia Martinez, Ph.D.',
-      specialty: 'Cosmetic Bioengineering',
-      rating: 5,
-      consultations: 150,
-      profilePicture: require('@/assets/images/profile.jpg'),
-    },
-    {
-      id: 4,
-      name: 'Dr. Michael Davidson, M.D.',
-      specialty: 'Nano-Dermatology',
-      rating: 4.8,
-      consultations: 90,
-      profilePicture: require('@/assets/images/profile.jpg'),
-    },
-  ];
+  useEffect(() => {
+    fetch('http://localhost:8080/api/medecins')
+      .then(res => res.json())
+      .then(data => setDoctors(data as Doctor[]));
+  }, []);
 
+  // Mock data for doctors and appointments
   const appointments = [
     {
       id: 1,

@@ -9,15 +9,25 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleLogin = () => {
-    // Simule une vérification du login
-    console.log('Email:', email);
-    console.log('Password:', password);
-
-    if (password === 'doctor') {
-      router.push('/DoctorHomeScreen'); // ✅ Page d'accueil médecin
-    } else {
-      router.push('/home');       // ✅ Page d'accueil patient
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/login/patient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          motDePasse: password
+        })
+      });
+      const data = await response.json();
+      if (data && data.id) {
+        router.push('/home');
+      } else {
+        alert('Email ou mot de passe incorrect');
+      }
+    } catch (error) {
+      alert('Erreur de connexion au serveur');
+      console.error(error);
     }
   };
 
