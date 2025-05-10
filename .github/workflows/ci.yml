@@ -24,12 +24,12 @@ jobs:
         working-directory: docnow-backend
         run: mvn surefire-report:report
       - name: Upload test report (TXT/XML)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-test-report
           path: docnow-backend/target/surefire-reports/
       - name: Upload HTML test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-html-report
           path: docnow-backend/target/site/surefire-report.html
@@ -53,12 +53,12 @@ jobs:
         working-directory: docnow-jee
         run: mvn surefire-report:report
       - name: Upload test report (TXT/XML)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jee-test-report
           path: docnow-jee/target/surefire-reports/
       - name: Upload HTML test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jee-html-report
           path: docnow-jee/target/site/surefire-report.html
@@ -81,7 +81,7 @@ jobs:
         working-directory: docnow-frontend
         run: npm test -- --ci --reporters=default --reporters=jest-junit
       - name: Upload Jest JUnit report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-junit-report
           path: docnow-frontend/junit.xml
