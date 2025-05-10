@@ -35,15 +35,16 @@ jobs:
         run: mvn clean package
 
   build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install & build frontend
-        working-directory: docnow-frontend
-        run: |
-          npm install
-          npm run build
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: Set up Node.js ≥18
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18
+        - name: Install & build frontend
+          working-directory: docnow-frontend
+          run: |
+              npm install
+              npm run build
+      
