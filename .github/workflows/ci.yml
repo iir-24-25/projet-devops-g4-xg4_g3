@@ -73,29 +73,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy Backend (JAR) via SSH
+      - name: Copy backend JAR to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "docnow-backend/target/*.jar"
+          target: "/opt/docnow-backend/"
+      - name: (Optionnel) Lancer le backend
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /opt/docnow-backend
-            scp -o StrictHostKeyChecking=no ${{ github.workspace }}/docnow-backend/target/*.jar ./
-            systemctl restart docnow-backend.service
+            echo "Fichier JAR copié. Ajoute ici la commande pour lancer ton backend si besoin."
 
   deploy-jee:
     needs: build-jee
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy JEE (WAR) via SSH
+      - name: Copy JEE WAR to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "docnow-jee/target/*.war"
+          target: "/opt/tomcat10/webapps/"
+      - name: Redémarrer Tomcat
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd /opt/tomcat/webapps
-            scp -o StrictHostKeyChecking=no ${{ github.workspace }}/docnow-jee/target/*.war ./
-            systemctl restart tomcat
+            /opt/tomcat10/bin/shutdown.sh || true
+            /opt/tomcat10/bin/startup.sh
