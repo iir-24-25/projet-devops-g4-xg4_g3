@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # DocNow
 
 **DocNow** est une plateforme de gestion de rendez-vous médicaux, répartie en trois modules :
@@ -74,19 +73,6 @@ Vous pouvez suivre l’état du pipeline sur l’onglet **Actions** du dépôt.
 
 ---
 
-## Contribuer
-
-1. Forkez ce dépôt.
-2. Créez une branche (`git checkout -b feat/ma-feature`).
-3. Faites vos modifications et committez (`git commit -m "feat: description courte"`).
-4. Poussez sur votre fork (`git push origin feat/ma-feature`).
-5. Ouvrez une Pull Request.
-
----
-
 ## Licence
 
-MIT © Sabiressaad
-=======
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/kMLc-Wol)
->>>>>>> 783c8a9be6f12ee1de9f90b2ff123123c2fc2318
+MIT © Sabiressaad © Aymanennabirha © Rahhalaitnaceur © Amineassalane
